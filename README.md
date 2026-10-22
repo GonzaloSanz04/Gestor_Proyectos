@@ -107,7 +107,49 @@ Se guarda el proyecto en la tarea para comprobar la pertenencia al proyecto sin 
 
 ## MVP
 
-Por definir.
+Sistema para que equipos de trabajo desglosen el trabajo (proyecto, épica, user story y tarea), se repartan las tareas y avancen en una misma dirección. La primera versión incluye solo lo básico para que el sistema funcione, y se expone como API REST documentada con Swagger (sin frontend).
+
+### Historias de usuario
+
+- Como usuario quiero registrarme proporcionando username, correo, contraseña y mis datos personales.
+- Como usuario quiero iniciar sesión con mi correo o con mi username.
+- Como administrador quiero crear proyectos para distribuir el trabajo (solo los administradores pueden crearlos).
+- Como usuario quiero conocer los proyectos a los que pertenezco.
+- Como editor de un proyecto quiero crear épicas, user stories y tareas.
+- Como editor de un proyecto quiero añadir usuarios (entran con rol USUARIO).
+- Como editor de un proyecto quiero cambiar el rol de un miembro para hacerlo editor.
+- Como usuario quiero ver la lista de tareas planificadas de un proyecto.
+- Como usuario quiero asignarme tareas planificadas (pasan a EN_CURSO).
+- Como usuario quiero listar mis tareas en curso de un proyecto para planificar mi trabajo.
+- Como usuario quiero cambiar el estado de las tareas que tengo asignadas (incluido cerrarlas).
+- Como editor quiero cerrar un proyecto cuando todas sus épicas estén cerradas.
+
+### Ciclo de vida de una tarea
+
+- Transiciones permitidas: PLANIFICADO a EN_CURSO, EN_CURSO a CERRADO y EN_CURSO a PLANIFICADO.
+- No se puede pasar de PLANIFICADO a CERRADO directamente.
+- Autoasignarse una tarea la pasa a EN_CURSO.
+- Volver a PLANIFICADO elimina la asignación.
+- CERRADO es un estado final: no se reabre, se crea una tarea nueva.
+- Cada tarea tiene un único responsable en el MVP (restricción UNIQUE sobre tarea_id en la tabla de asignaciones).
+
+### Reglas de negocio del MVP
+
+- El primer administrador se crea mediante promoción manual en la base de datos.
+- El creador de un proyecto entra automáticamente como EDITOR.
+- Una US se cierra automáticamente cuando todas sus tareas están cerradas.
+- Una épica se cierra automáticamente cuando todas sus US están cerradas.
+- El cierre del proyecto es manual y solo es posible con todas las épicas cerradas.
+- No se pueden crear elementos hijos dentro de un padre cerrado.
+- Solo se puede asignar una tarea a miembros del proyecto.
+
+### Fuera del MVP
+
+- Invitaciones a otros usuarios para colaborar en tareas.
+- Editar y borrar épicas, user stories y tareas (cambiar el estado sí está incluido).
+- Borrar proyectos y quitar miembros.
+- Frontend.
+- Despliegue en cloud.
 
 ## Cómo ejecutarlo
 
