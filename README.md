@@ -1,13 +1,12 @@
 # Gestor de proyectos y tareas
 
-API REST para gestionar proyectos con una jerarquía Proyecto > Épica > User Story > Tarea, con roles por proyecto y asignación de tareas a varios usuarios.
+API REST para gestionar proyectos con una jerarquía Proyecto > Épica > User Story > Tarea, con roles por proyecto y asignación de tareas a un usuario.
 
 Proyecto personal de formación. El objetivo es practicar las funcionalidades habituales de un backend (API, base de datos, autenticación, tests, Docker, CI/CD) y documentar las decisiones tomadas por el camino.
 
 ## Estado del proyecto
 
-- Fase actual: diseño del modelo de datos.
-- Pendiente: definir el MVP, la estructura del repositorio e implementar registro y login.
+- Fase actual: persistencia (modelos hechos, migraciones con Alembic en curso).
 
 ## Stack
 
@@ -22,7 +21,7 @@ Proyecto personal de formación. El objetivo es practicar las funcionalidades ha
 ### Entidades
 
 **Usuario**
-- id (PK), username (único), nombre, apellidos, correo (único), password_hash
+- id (PK), username (único), nombre, apellidos, email (único), password_hash
 - telefono (opcional, único), rol (USUARIO, ADMIN), activo
 - fecha_alta, fecha_modificacion
 
@@ -46,7 +45,7 @@ Proyecto personal de formación. El objetivo es practicar las funcionalidades ha
 - fecha_creacion, fecha_modificacion
 
 **Tarea**
-- id (PK), creador_id (FK), proyecto_id (FK), us_id (FK), titulo, descripcion (opcional)
+- id (PK), creador_id (FK), us_id (FK), titulo, descripcion (opcional)
 - estado, prioridad, fecha_limite (opcional)
 - fecha_creacion, fecha_modificacion
 
@@ -89,19 +88,20 @@ Se elige una tabla por nivel en lugar de una tabla única con tipo y jerarquía.
 
 Motivo: en este proyecto los tres niveles son fijos y se prioriza la integridad referencial y la claridad del esquema.
 
-### Proyecto_id directo en Tarea
+### Borrado Mixto
 
-Se guarda el proyecto en la tarea para comprobar la pertenencia al proyecto sin recorrer US y Épica. Riesgo: que el proyecto de la tarea no coincida con el de su US. La forma de evitarlo está pendiente de decidir.
+El borrado en tablas intermedias y en la jerarquía: Proyecto > Épica > User Story > Tarea, será "CASCADE". Sin embargo, en creador_id y asignado_por será "RESTRICTED". 
+Esto se ha decidido ya que si se elimina un proyecto se eliminará en consecuencia todo lo que hay debajo. Por otro lado, si el creador de una tarea se elimina, no tiene por qué eliminarse también la tarea.
+
+### Tarea no guarda proyecto_id
+
+El proyecto se obtiene por US y épica. Así no puede haber incoherencia entre la tarea y su US, a costa de joins.
 
 ## Decisiones pendientes
 
 - Tabla de permisos por rol (ADMIN global, EDITOR, USUARIO) para cada acción de la API.
 - Renombrar los roles de proyecto para que no choquen con el rol global (USUARIO).
-- Estado para descartar trabajo que ya no hace falta (por ejemplo CANCELADO).
-- Si se puede crear una tarea dentro de una US cerrada.
-- Transiciones de estado permitidas.
 - Qué ocurre con las asignaciones de un usuario que sale del proyecto.
-- Política de borrado en cascada por nivel (CASCADE o RESTRICT).
 - Si un proyecto puede quedarse sin ningún editor.
 - Idioma de los nombres en el código y las tablas.
 
@@ -153,12 +153,13 @@ Sistema para que equipos de trabajo desglosen el trabajo (proyecto, épica, user
 
 ## Cómo ejecutarlo
 
-Por definir.
+- Crear venv -> python -m venv .venv
+- pip install -r requirements.txt
+- opiar .env.example a .env
+- uvicorn src.main:app --reload
 
 ## Hoja de ruta
 
-- [ ] Cerrar el modelo de datos
-- [ ] Definir el MVP y las historias de usuario
 - [ ] Estructura del repositorio y entorno con Docker Compose
 - [ ] Registro y login
 - [ ] CRUD de proyectos, épicas, US y tareas
