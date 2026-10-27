@@ -1,13 +1,11 @@
-from datetime import UTC, datetime
-from enum import Enum
+from datetime import datetime
 from sqlalchemy import DateTime, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.database import Base
 from src.enums import RolGlobal
 
-def ahora() -> datetime:
-    return datetime.now(UTC)
+from src.models.utils import ahora
 
 class Usuario(Base):
     __tablename__ = "usuarios"
