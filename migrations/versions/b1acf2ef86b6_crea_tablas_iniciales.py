@@ -1,8 +1,8 @@
 """crea tablas iniciales
 
-Revision ID: 9c4ab72bda10
+Revision ID: b1acf2ef86b6
 Revises: 
-Create Date: 2026-10-29 12:12:20.710829
+Create Date: 2026-10-29 12:27:00.932385
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '9c4ab72bda10'
+revision: str = 'b1acf2ef86b6'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -46,7 +46,7 @@ def upgrade() -> None:
     sa.Column('estado', sa.Enum('PLANIFICADO', 'EN_CURSO', 'CERRADO', name='estado'), nullable=False),
     sa.Column('fecha_creacion', sa.DateTime(timezone=True), nullable=False),
     sa.Column('fecha_modificacion', sa.DateTime(timezone=True), nullable=False),
-    sa.ForeignKeyConstraint(['creador_id'], ['usuarios.id'], ),
+    sa.ForeignKeyConstraint(['creador_id'], ['usuarios.id'], ondelete='RESTRICT'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('epicas',
@@ -67,9 +67,9 @@ def upgrade() -> None:
     sa.Column('proyecto_id', sa.Integer(), nullable=False),
     sa.Column('usuario_id', sa.Integer(), nullable=False),
     sa.Column('fecha_union', sa.DateTime(timezone=True), nullable=False),
-    sa.Column('rol', sa.Enum('USUARIO', 'EDITOR', name='rolproyecto'), nullable=False),
-    sa.ForeignKeyConstraint(['proyecto_id'], ['proyectos.id'], ),
-    sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ),
+    sa.Column('rol_en_proyecto', sa.Enum('USUARIO', 'EDITOR', name='rolproyecto'), nullable=False),
+    sa.ForeignKeyConstraint(['proyecto_id'], ['proyectos.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('proyecto_id', 'usuario_id')
     )
     op.create_table('user_stories',
