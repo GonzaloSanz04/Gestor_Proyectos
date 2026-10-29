@@ -12,7 +12,7 @@ class Proyecto(Base):
     __tablename__ = "proyectos"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    creador_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
+    creador_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="RESTRICT"))
     titulo: Mapped[str] = mapped_column(String(100))
     descripcion: Mapped[str | None] = mapped_column(String(255))
     estado: Mapped[Estado] = mapped_column(Enum(Estado), default=Estado.PLANIFICADO)
