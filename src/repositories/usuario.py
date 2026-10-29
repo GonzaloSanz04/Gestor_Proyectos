@@ -14,5 +14,5 @@ def obtener_por_email(db: Session, email: str) -> Usuario | None:
 def crear(db: Session, usuario: Usuario) -> Usuario:
     """Crea un nuevo usuario en la base de datos."""
     db.add(usuario)
-    db.flush
+    db.flush()
     return usuario
