@@ -157,6 +157,7 @@ Sistema para que equipos de trabajo desglosen el trabajo (proyecto, épica, user
 - pip install -r requirements.txt
 - opiar .env.example a .env
 - uvicorn src.main:app --reload
+- alembic upgrade head
 
 ## Hoja de ruta
 
