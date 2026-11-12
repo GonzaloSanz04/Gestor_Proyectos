@@ -6,11 +6,11 @@ Proyecto personal de formación. El objetivo es practicar las funcionalidades ha
 
 ## Estado del proyecto
 
-- Fase actual: persistencia (modelos hechos, migraciones con Alembic en curso).
+- Fase actual: autenticación (registro hecho, login con JWT en curso).
 
 ## Stack
 
-- Lenguaje: Python
+- Lenguaje: Python 3.11 o superior
 - Framework: FastAPI
 - Base de datos: PostgreSQL
 - Previsto: SQLAlchemy (ORM), Alembic (migraciones), pytest, Docker Compose, GitHub Actions
@@ -45,7 +45,7 @@ Proyecto personal de formación. El objetivo es practicar las funcionalidades ha
 - fecha_creacion, fecha_modificacion
 
 **Tarea**
-- id (PK), creador_id (FK), us_id (FK), titulo, descripcion (opcional)
+- id (PK), creador_id (FK), user_story_id (FK), titulo, descripcion (opcional)
 - estado, prioridad, fecha_limite (opcional)
 - fecha_creacion, fecha_modificacion
 
@@ -75,6 +75,8 @@ El enum de estado (EN_CURSO, CERRADO, PLANIFICADO) es compartido por Proyecto, �
 - No se puede asignar una tarea a un usuario que no sea miembro del proyecto.
 - Las entidades cerradas no se reabren: se crea una nueva.
 - Los usuarios no se borran, se desactivan (campo activo).
+- El username no admite espacios.
+- username y correo se guardan en minúsculas (también al buscar en el login).
 
 ## Decisiones de arquitectura
 
@@ -154,10 +156,12 @@ Sistema para que equipos de trabajo desglosen el trabajo (proyecto, épica, user
 ## Cómo ejecutarlo
 
 - Crear venv -> python -m venv .venv
+- Activar venv -> .venv\Scripts\activate
 - pip install -r requirements.txt
-- opiar .env.example a .env
-- uvicorn src.main:app --reload
+- Copiar .env.example a .env
 - alembic upgrade head
+- uvicorn src.main:app --reload
+
 
 ## Hoja de ruta
 
