@@ -1,5 +1,4 @@
 
-
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -8,8 +7,6 @@ from src.models.usuario import Usuario
 from src.repositories.usuario import obtener_por_email, obtener_por_username, crear
 from src.schemas.usuario import UsuarioCreate
 from src.services.auth import hashear_password, verificar_password
-
-
 
 def registrar_usuario(db: Session, datos: UsuarioCreate) -> Usuario:
     """Registra un nuevo usuario en la base de datos."""
