@@ -11,6 +11,10 @@ def obtener_por_email(db: Session, email: str) -> Usuario | None:
     """Obtiene un usuario por su dirección de correo electrónico."""
     return db.scalar(select(Usuario).where(Usuario.email == email))
 
+def obtener_por_id(db: Session, usuario_id: int) -> Usuario | None:
+    """Obtiene un usuario por su ID."""
+    return db.scalar(select(Usuario).where(Usuario.id == usuario_id))
+
 def crear(db: Session, usuario: Usuario) -> Usuario:
     """Crea un nuevo usuario en la base de datos."""
     db.add(usuario)
