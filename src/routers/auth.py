@@ -1,5 +1,7 @@
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+
 from sqlalchemy.orm import Session
 
 from src.database import get_db
@@ -7,8 +9,8 @@ from src.dependencies import usuario_actual
 from src.schemas.usuario import UsuarioCreate, UsuarioRead
 from src.services.usuario import autenticar_usuario, registrar_usuario
 from src.exceptions import CredencialesInvalidas, UsuarioInactivo, UsuarioYaExiste
-from src.schemas.auth import  Token
 from src.models.usuario import Usuario
+from src.schemas.auth import Token
 from src.services.auth import crear_token
 
 router = APIRouter(
@@ -33,7 +35,7 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
         token = crear_token(usuario.id)
 
         return Token(access_token=token)
-    
+
     except CredencialesInvalidas as e:
         raise HTTPException(status_code=401, detail=str(e), headers={"WWW-Authenticate": "Bearer"})
     except UsuarioInactivo as e:
@@ -43,4 +45,5 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
 def obtener_usuario_actual(usuario: Usuario = Depends(usuario_actual)):
     """Obtiene la información del usuario actualmente autenticado."""
     return usuario
+
     

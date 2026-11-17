@@ -1,14 +1,12 @@
 
-
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from src.exceptions import UsuarioYaExiste
+from src.exceptions import CredencialesInvalidas, UsuarioInactivo, UsuarioYaExiste
 from src.models.usuario import Usuario
 from src.repositories.usuario import obtener_por_email, obtener_por_username, crear
 from src.schemas.usuario import UsuarioCreate
-from src.services.auth import hashear_password
-
+from src.services.auth import hashear_password, verificar_password
 
 def registrar_usuario(db: Session, datos: UsuarioCreate) -> Usuario:
     """Registra un nuevo usuario en la base de datos."""
@@ -38,4 +36,17 @@ def registrar_usuario(db: Session, datos: UsuarioCreate) -> Usuario:
     except IntegrityError as e:
         db.rollback()
         raise UsuarioYaExiste("El usuario ya existe en la base de datos") from e
+    return usuario
+
+def autenticar_usuario(db: Session, identificador: str, password: str) -> Usuario:
+    """Autentica un usuario por correo electrónico y contraseña."""
+    if "@" in identificador:
+        usuario = obtener_por_email(db, identificador.lower())
+    else:
+        usuario = obtener_por_username(db, identificador.lower())
+
+    if not usuario or not verificar_password(password, usuario.password_hash):
+        raise CredencialesInvalidas("Credenciales inválidas")
+    elif not usuario.activo:
+        raise UsuarioInactivo("El usuario está inactivo")
     return usuario
