@@ -166,7 +166,6 @@ Sistema para que equipos de trabajo desglosen el trabajo (proyecto, épica, user
 ## Hoja de ruta
 
 - [ ] Estructura del repositorio y entorno con Docker Compose
-- [ ] Registro y login
 - [ ] CRUD de proyectos, épicas, US y tareas
 - [ ] Roles por proyecto y asignaciones
 - [ ] Tests de integración y pipeline en GitHub Actions
